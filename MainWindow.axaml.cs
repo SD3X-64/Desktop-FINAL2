@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using System;
 
 namespace Desktop_FINAL2
 {
@@ -7,6 +8,7 @@ namespace Desktop_FINAL2
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = this;
         }
     }
 }
