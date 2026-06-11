@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using System;
@@ -31,9 +32,8 @@ namespace Desktop_FINAL2
             [MaxLength(200)]
             public string GenreName { get; set; } = string.Empty;
             public DateTime? YearStarted { get; set; }
-            public int? Seasons { get; set; }
             public int? Episodes { get; set; }
-            public string? AnimeStatus { get; set; }
+            public string? Status { get; set; }
             public string? WatchStatus { get; set; }
             public int? LastWatched { get; set; }
         }
@@ -71,9 +71,8 @@ namespace Desktop_FINAL2
                 StudioName NVARCHAR(200) NOT NULL,
                 GenreName NVARCHAR(200) NOT NULL,
                 YearStarted DATE,
-                Seasons INT,
                 Episodes INT,
-                AnimeStatus NVARCHAR,
+                Status NVARCHAR,
                 WatchStatus NVARCHAR,
                 LastWatched INT,
                 )";
@@ -91,6 +90,30 @@ namespace Desktop_FINAL2
                 Id INT PRIMARY KEY IDENTITY(1,1),
                 Name NVARCHAR(200) NOT NULL,
                 )";
+
+            using var command = new SqlCommand(sqlQuery, connection);
+            command.ExecuteNonQuery();
+
+            using var command1 = new SqlCommand(sqlQuery1, connection);
+            command1.ExecuteNonQuery();
+
+            using var command2 = new SqlCommand(sqlQuery2, connection);
+            command2.ExecuteNonQuery();
+        }
+
+        public void TestData(string ConnectionString)
+        {
+            using var connection = new SqlConnection(ConnectionString);
+            connection.Open();
+
+            string sqlQuery = @"INSERT INTO Titles (Title, YearStarted, Episodes, Status, WatchStatus, LastWatched)
+                VALUES (@title, @ys, @ep, @status, @ws, @lw)";
+
+            string sqlQuery1 = @"INSERT INTO Studios (Name)
+                VALUES (@name)";
+
+            string sqlQuery2 = @"INSERT INTO Genres (Name)
+                VALUES (@name)";
 
             using var command = new SqlCommand(sqlQuery, connection);
             command.ExecuteNonQuery();

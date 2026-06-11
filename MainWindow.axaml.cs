@@ -22,7 +22,8 @@ namespace Desktop_FINAL2
 
         public void DBInit(object? sender, RoutedEventArgs e)
         {
-            DatabaseInitializer.InitTables(ConnectionString);
+            DatabaseInitializer dbinit = new DatabaseInitializer();
+            dbinit.InitTables(ConnectionString);
         }
     }
 }
