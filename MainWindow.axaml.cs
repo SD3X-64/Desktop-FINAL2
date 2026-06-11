@@ -24,6 +24,7 @@ namespace Desktop_FINAL2
         {
             DatabaseInitializer dbinit = new DatabaseInitializer();
             dbinit.InitTables(ConnectionString);
+            dbinit.TestData(ConnectionString);
         }
     }
 }
