@@ -7,7 +7,10 @@
         x:DataType="local:MainWindow"
         x:Class="Desktop_FINAL2.MainWindow"
         Title="Desktop_FINAL2">
-    <StackPanel Orientation ="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button Content="{Binding ButtonText}" Click="DBInit" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+    <StackPanel Orientation ="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Button Content="a"/>
+        <StackPanel Orientation ="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <Button Content="{Binding ButtonText}" Click="DBInit" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+        </StackPanel>
     </StackPanel>
 </Window>
