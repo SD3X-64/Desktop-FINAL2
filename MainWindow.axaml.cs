@@ -3,7 +3,6 @@ using Avalonia.Interactivity;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Tmds.DBus.Protocol;
 
 namespace Desktop_FINAL2
 {
@@ -36,15 +35,9 @@ namespace Desktop_FINAL2
 
         public void DBInit(object? sender, RoutedEventArgs e)
         {
-            ButtonText = "Initializing Database";
             DatabaseInitializer dbinit = new DatabaseInitializer();
-            ButtonText = "Initializing Database.";
             dbinit.InitTables(ConnectionString);
-            ButtonText = "Initializing Database..";
             dbinit.TestData(ConnectionString);
-            ButtonText = "Initializing Database...";
-            ButtonText = "Done!";
-            ButtonText = buttonText;
         }
     }
 }

@@ -72,8 +72,8 @@ namespace Desktop_FINAL2
                 PrimaryGenre NVARCHAR(200) NOT NULL,
                 YearStarted DATE,
                 Episodes INT,
-                Status NVARCHAR,
-                WatchStatus NVARCHAR,
+                Status NVARCHAR (50),
+                WatchStatus NVARCHAR (50),
                 LastWatched INT,
 
                 CONSTRAINT FK_Studio FOREIGN KEY (Studio) REFERENCES Studios(Name),
@@ -84,24 +84,24 @@ namespace Desktop_FINAL2
             IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Studios')
             CREATE TABLE Studios (
                 Id INT PRIMARY KEY IDENTITY(1,1),
-                Name NVARCHAR(200) NOT NULL,
+                Name NVARCHAR(200) NOT NULL
                 )";
 
             string sqlQuery2 = @"
             IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Genres')
             CREATE TABLE Genres (
                 Id INT PRIMARY KEY IDENTITY(1,1),
-                Name NVARCHAR(200) NOT NULL,
+                Name NVARCHAR(200) NOT NULL
                 )";
-
-            using var command = new SqlCommand(sqlQuery, connection);
-            command.ExecuteNonQuery();
 
             using var command1 = new SqlCommand(sqlQuery1, connection);
             command1.ExecuteNonQuery();
 
             using var command2 = new SqlCommand(sqlQuery2, connection);
             command2.ExecuteNonQuery();
+            
+            using var command = new SqlCommand(sqlQuery, connection);
+            command.ExecuteNonQuery();
         }
 
         public void TestData(string ConnectionString)
@@ -109,139 +109,55 @@ namespace Desktop_FINAL2
             using var connection = new SqlConnection(ConnectionString);
             connection.Open();
 
-            string sqlQuery2 = @"INSERT INTO Titles (Title, Studio, PrimaryGenre, YearStarted, Episodes, Status, WatchStatus, LastWatched)
-                VALUES (@title, @sn, @gn, @ys, @ep, @status, @ws, @lw)";
+            string[] studios = { "MAPPA", "Studio Drive", "Kyoto Animation", "CloverWorks", "Wit Studio", "CygamesPictures" };
+            string insertStudio = "INSERT INTO Studios (Name) VALUES (@name)";
+            foreach (var studio in studios)
+            {
+                using var cmd = new SqlCommand(insertStudio, connection);
+                cmd.Parameters.AddWithValue("@name", studio);
+                cmd.ExecuteNonQuery();
+            }
 
-            string sqlQuery = @"INSERT INTO Studios (Name)
-                VALUES (@name)";
+            string[] genres = { "Shonen", "Romance", "Gag Humor", "cgdct", "Isekai", "Music" };
+            string insertGenre = "INSERT INTO Genres (Name) VALUES (@name)";
+            foreach (var genre in genres)
+            {
+                using var cmd = new SqlCommand(insertGenre, connection);
+                cmd.Parameters.AddWithValue("@name", genre);
+                cmd.ExecuteNonQuery();
+            }
 
-            string sqlQuery1 = @"INSERT INTO Genres (Name)
-                VALUES (@name)";
+            var animes = new List<(string Title, string Studio, string Genre, string? Year, int? Ep, string Status, string Watch, int? Last)>
+            {
+                ("Lucky Star", "Kyoto Animation", "cgdct", "2007", 24, "Released", "Viewed", 24),
+                ("Shikanoko Nokonoko Koshitantan", "Wit Studio", "Gag Humor", "2024", 12, "Released", "Viewed", 12),
+                ("Nichijou", "Kyoto Animation", "Gag Humor", "2011", 26, "Released", "Viewed", 26),
+                ("Konosuba 4", "Studio Drive", "Isekai", null, null, "Announced", "Planned", null),
+                ("Bocchi The Rock! 2", "CloverWorks", "Music", null, null, "Announced", "Planned", null),
+                ("Umamusume: Pretty Derby - Start of New Era", "CygamesPictures", "Sport", "2024", 1, "Released", "Watching", 1),
+                ("Spy x Family", "CloverWorks", "Shonen", "2022", 12, "Released", "Vieved", 12),
+            };
 
-            using var command = new SqlCommand(sqlQuery, connection);
-            command.Parameters.AddWithValue("@name", "MAPPA");
-            command.ExecuteNonQuery();
+            string insertAnime = @"
+            INSERT INTO Titles (Title, Studio, PrimaryGenre, YearStarted, Episodes, Status, WatchStatus, LastWatched)
+            VALUES (@title, @sn, @gn, @ys, @ep, @status, @ws, @lw)";
 
-            using var command1 = new SqlCommand(sqlQuery, connection);
-            command.Parameters.AddWithValue("@name", "Studio Drive");
-            command.ExecuteNonQuery();
-
-            using var command2 = new SqlCommand(sqlQuery, connection);
-            command.Parameters.AddWithValue("@name", "Kyoto Animation");
-            command.ExecuteNonQuery();
-
-            using var command3 = new SqlCommand(sqlQuery, connection);
-            command.Parameters.AddWithValue("@name", "CloverWorks");
-            command.ExecuteNonQuery();
-
-            using var command4 = new SqlCommand(sqlQuery, connection);
-            command.Parameters.AddWithValue("@name", "Wit Studio");
-            command.ExecuteNonQuery();
-
-            using var command5 = new SqlCommand(sqlQuery, connection);
-            command.Parameters.AddWithValue("@name", "CygamesPictures");
-            command.ExecuteNonQuery();
-
-            using var command6 = new SqlCommand(sqlQuery1, connection);
-            command.Parameters.AddWithValue("@name", "Shonen");
-            command1.ExecuteNonQuery();
-
-            using var command7 = new SqlCommand(sqlQuery1, connection);
-            command.Parameters.AddWithValue("@name", "Romance");
-            command1.ExecuteNonQuery();
-
-            using var command8 = new SqlCommand(sqlQuery1, connection);
-            command.Parameters.AddWithValue("@name", "Gag Humor");
-            command1.ExecuteNonQuery();
-
-            using var command9 = new SqlCommand(sqlQuery1, connection);
-            command.Parameters.AddWithValue("@name", "cgdct");
-            command1.ExecuteNonQuery();
-
-            using var command10 = new SqlCommand(sqlQuery1, connection);
-            command.Parameters.AddWithValue("@name", "Isekai");
-            command1.ExecuteNonQuery();
-
-            using var command11 = new SqlCommand(sqlQuery1, connection);
-            command.Parameters.AddWithValue("@name", "Music");
-            command1.ExecuteNonQuery();
-
-            using var command12 = new SqlCommand(sqlQuery2, connection);
-            command.Parameters.AddWithValue("@title", "Lucky Star");
-            command.Parameters.AddWithValue("@sn", "Kyoto Animation");
-            command.Parameters.AddWithValue("@gn", "cgdct");
-            command.Parameters.AddWithValue("@ys", "2007");
-            command.Parameters.AddWithValue("@ep", 24);
-            command.Parameters.AddWithValue("@status", "Released");
-            command.Parameters.AddWithValue("@ws", "Viewed");
-            command.Parameters.AddWithValue("@lw", 24);
-            command2.ExecuteNonQuery();
-
-            using var command13 = new SqlCommand(sqlQuery2, connection);
-            command.Parameters.AddWithValue("@title", "Shikanoko Nokonoko Koshitantan");
-            command.Parameters.AddWithValue("@sn", "Wit Studio");
-            command.Parameters.AddWithValue("@gn", "Gag Humor");
-            command.Parameters.AddWithValue("@ys", "2024");
-            command.Parameters.AddWithValue("@ep", 12);
-            command.Parameters.AddWithValue("@status", "Released");
-            command.Parameters.AddWithValue("@ws", "Viewed");
-            command.Parameters.AddWithValue("@lw", 12);
-            command2.ExecuteNonQuery();
-
-            using var command14 = new SqlCommand(sqlQuery2, connection);
-            command.Parameters.AddWithValue("@title", "Nichijou");
-            command.Parameters.AddWithValue("@sn", "Kyoto Animation");
-            command.Parameters.AddWithValue("@gn", "Gag Humor");
-            command.Parameters.AddWithValue("@ys", "2011");
-            command.Parameters.AddWithValue("@ep", 26);
-            command.Parameters.AddWithValue("@status", "Released");
-            command.Parameters.AddWithValue("@ws", "Viewed");
-            command.Parameters.AddWithValue("@lw", 26);
-            command2.ExecuteNonQuery();
-
-            using var command15 = new SqlCommand(sqlQuery2, connection);
-            command.Parameters.AddWithValue("@title", "Konosuba 4");
-            command.Parameters.AddWithValue("@sn", "Studio Drive");
-            command.Parameters.AddWithValue("@gn", "Isekai");
-            command.Parameters.AddWithValue("@ys", null);
-            command.Parameters.AddWithValue("@ep", null);
-            command.Parameters.AddWithValue("@status", "Announced");
-            command.Parameters.AddWithValue("@ws", "Planned");
-            command.Parameters.AddWithValue("@lw", null);
-            command2.ExecuteNonQuery();
-
-            using var command16 = new SqlCommand(sqlQuery2, connection);
-            command.Parameters.AddWithValue("@title", "Bocchi The Rock 2");
-            command.Parameters.AddWithValue("@sn", "CloverWorks");
-            command.Parameters.AddWithValue("@gn", "Music");
-            command.Parameters.AddWithValue("@ys", null);
-            command.Parameters.AddWithValue("@ep", null);
-            command.Parameters.AddWithValue("@status", "Announced");
-            command.Parameters.AddWithValue("@ws", "Planned");
-            command.Parameters.AddWithValue("@lw", null);
-            command2.ExecuteNonQuery();
-
-            using var command17 = new SqlCommand(sqlQuery2, connection);
-            command.Parameters.AddWithValue("@title", "Umamusume: Pretty Derby - Shin Jidai no Tobira");
-            command.Parameters.AddWithValue("@sn", "CygamesPictures");
-            command.Parameters.AddWithValue("@gn", "Sport");
-            command.Parameters.AddWithValue("@ys", "2024");
-            command.Parameters.AddWithValue("@ep", 1);
-            command.Parameters.AddWithValue("@status", "Released");
-            command.Parameters.AddWithValue("@ws", "Watching");
-            command.Parameters.AddWithValue("@lw", 1);
-            command2.ExecuteNonQuery();
-
-            using var command18 = new SqlCommand(sqlQuery2, connection);
-            command.Parameters.AddWithValue("@title", "Spy x Family");
-            command.Parameters.AddWithValue("@sn", "cloverWorks");
-            command.Parameters.AddWithValue("@gn", "Shonen");
-            command.Parameters.AddWithValue("@ys", "2022");
-            command.Parameters.AddWithValue("@ep", 12);
-            command.Parameters.AddWithValue("@status", "Released");
-            command.Parameters.AddWithValue("@ws", "Viewed");
-            command.Parameters.AddWithValue("@lw", 12);
-            command2.ExecuteNonQuery();
+            foreach (var anime in animes)
+            {
+                using var cmd = new SqlCommand(insertAnime, connection);
+                cmd.Parameters.AddWithValue("@title", anime.Title);
+                cmd.Parameters.AddWithValue("@sn", anime.Studio);
+                cmd.Parameters.AddWithValue("@gn", anime.Genre);
+                if (string.IsNullOrEmpty(anime.Year))
+                    cmd.Parameters.AddWithValue("@ys", DBNull.Value);
+                else
+                    cmd.Parameters.AddWithValue("@ys", DateTime.ParseExact(anime.Year, "yyyy", null));
+                cmd.Parameters.AddWithValue("@ep", anime.Ep.HasValue ? (object)anime.Ep : DBNull.Value);
+                cmd.Parameters.AddWithValue("@status", anime.Status);
+                cmd.Parameters.AddWithValue("@ws", anime.Watch);
+                cmd.Parameters.AddWithValue("@lw", anime.Last.HasValue ? (object)anime.Last : DBNull.Value);
+                cmd.ExecuteNonQuery();
+            }
         }
     }
 }
