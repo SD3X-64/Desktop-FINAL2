@@ -3,6 +3,7 @@ using Avalonia.Interactivity;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using System.Threading.Tasks;
 
 namespace Desktop_FINAL2
 {
@@ -15,6 +16,8 @@ namespace Desktop_FINAL2
               Database=UniversityDB;
               Integrated Security=True;
               TrustServerCertificate=True;";
+
+        static public int a;
 
         public string buttonText = "Initialize Database";
         public string ButtonText
@@ -35,9 +38,21 @@ namespace Desktop_FINAL2
 
         public void DBInit(object? sender, RoutedEventArgs e)
         {
-            DatabaseInitializer dbinit = new DatabaseInitializer();
-            dbinit.InitTables(ConnectionString);
-            dbinit.TestData(ConnectionString);
+            if (a == 0)
+            {
+                ButtonText = "Initializing...";
+                DatabaseInitializer dbinit = new DatabaseInitializer();
+                dbinit.InitTables(ConnectionString);
+                dbinit.TestData(ConnectionString);
+                ButtonText = "Ready!";
+                a++;
+                ButtonText = buttonText;
+            }
+            else
+            {
+                ButtonText = "Database is arleady initialized";
+                ButtonText = buttonText;
+            }
         }
     }
 }
