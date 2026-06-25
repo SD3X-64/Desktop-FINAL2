@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Desktop_FINAL2
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -16,7 +16,7 @@ namespace Desktop_FINAL2
               Integrated Security=True;
               TrustServerCertificate=True;";
 
-        private bool _isInitialized = false;
+        private bool _isInitialized;
 
         public string buttonText = "Initialize Database";
         public string ButtonText
@@ -25,7 +25,7 @@ namespace Desktop_FINAL2
             set
             {
                 buttonText = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ButtonText)));
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(nameof(ButtonText)));
             }
         }
 
@@ -36,7 +36,7 @@ namespace Desktop_FINAL2
             set
             {
                 searchBar = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SearchBar)));
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(nameof(SearchBar)));
             }
         }
 
