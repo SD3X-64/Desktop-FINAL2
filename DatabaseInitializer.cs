@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -158,6 +159,35 @@ namespace Desktop_FINAL2
                 cmd.Parameters.AddWithValue("@lw", anime.Last.HasValue ? (object)anime.Last : DBNull.Value);
                 cmd.ExecuteNonQuery();
             }
+        }
+
+        public static List<Anime> LoadTitles(string ConnectionString)
+        {
+            var list = new List<Anime>();
+            using var connection = new SqlConnection(ConnectionString);
+            connection.Open();
+            string sql = @"
+                SELECT Id, Title, Studio, PrimaryGenre, YearStarted, Episodes, Status, WatchStatus, LastWatched
+                FROM Titles
+                ORDER BY Title";
+            using var cmd = new SqlCommand(sql, connection);
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                list.Add(new Anime
+                {
+                    Id = reader.GetInt32(0),
+                    Title = reader.GetString(1),
+                    StudioName = reader.GetString(2),
+                    GenreName = reader.GetString(3),
+                    YearStarted = reader.IsDBNull(4) ? null : reader.GetDateTime(4),
+                    Episodes = reader.IsDBNull(5) ? null : reader.GetInt32(5),
+                    Status = reader.IsDBNull(6) ? null : reader.GetString(6),
+                    WatchStatus = reader.IsDBNull(7) ? null : reader.GetString(7),
+                    LastWatched = reader.IsDBNull(8) ? null : reader.GetInt32(8)
+                });
+            }
+            return list;
         }
     }
 }

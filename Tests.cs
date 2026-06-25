@@ -1,9 +1,12 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Desktop_FINAL2.DatabaseInitializer;
 
 namespace Desktop_FINAL2
 {

@@ -2,8 +2,10 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using static Desktop_FINAL2.DatabaseInitializer;
 
 namespace Desktop_FINAL2
 {
@@ -43,6 +45,12 @@ namespace Desktop_FINAL2
         {
             InitializeComponent();
             DataContext = this;
+
+            private void LoadTitlesOC()
+            {
+                var list = LoadTitles(ConnectionString);
+                Titles = new ObservableCollection<Anime>(list);
+            }
         }
 
         public async void DBInit(object? sender, RoutedEventArgs e)
