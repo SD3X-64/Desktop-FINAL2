@@ -3,7 +3,6 @@ using Avalonia.Interactivity;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using System.Threading.Tasks;
 
 namespace Desktop_FINAL2
 {
@@ -17,7 +16,7 @@ namespace Desktop_FINAL2
               Integrated Security=True;
               TrustServerCertificate=True;";
 
-        static public int a;
+        private bool _isInitialized = false;
 
         public string buttonText = "Initialize Database";
         public string ButtonText
@@ -26,7 +25,7 @@ namespace Desktop_FINAL2
             set
             {
                 buttonText = value;
-                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(nameof(ButtonText)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ButtonText)));
             }
         }
 
@@ -37,7 +36,7 @@ namespace Desktop_FINAL2
             set
             {
                 searchBar = value;
-                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(nameof(SearchBar)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SearchBar)));
             }
         }
 
@@ -49,20 +48,18 @@ namespace Desktop_FINAL2
 
         public void DBInit(object? sender, RoutedEventArgs e)
         {
-            if (a == 0)
+            if (_isInitialized == false)
             {
                 ButtonText = "Initializing...";
                 DatabaseInitializer dbinit = new DatabaseInitializer();
                 dbinit.InitTables(ConnectionString);
                 dbinit.TestData(ConnectionString);
-                ButtonText = "Ready!";
-                a++;
-                ButtonText = buttonText;
+                ButtonText = "Database have been initialized";
+                _isInitialized = true;
             }
             else
             {
                 ButtonText = "Database is arleady initialized";
-                ButtonText = buttonText;
             }
         }
     }

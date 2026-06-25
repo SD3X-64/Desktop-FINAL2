@@ -84,14 +84,14 @@ namespace Desktop_FINAL2
             IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Studios')
             CREATE TABLE Studios (
                 Id INT PRIMARY KEY IDENTITY(1,1),
-                Name NVARCHAR(200) NOT NULL
+                Name NVARCHAR(200) NOT NULL UNIQUE
                 )";
 
             string sqlQuery2 = @"
             IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Genres')
             CREATE TABLE Genres (
                 Id INT PRIMARY KEY IDENTITY(1,1),
-                Name NVARCHAR(200) NOT NULL
+                Name NVARCHAR(200) NOT NULL UNIQUE
                 )";
 
             using var command1 = new SqlCommand(sqlQuery1, connection);
@@ -118,7 +118,7 @@ namespace Desktop_FINAL2
                 cmd.ExecuteNonQuery();
             }
 
-            string[] genres = { "Shonen", "Romance", "Gag Humor", "cgdct", "Isekai", "Music" };
+            string[] genres = { "Shonen", "Romance", "Gag Humor", "cgdct", "Isekai", "Music", "Sport" };
             string insertGenre = "INSERT INTO Genres (Name) VALUES (@name)";
             foreach (var genre in genres)
             {
@@ -135,7 +135,7 @@ namespace Desktop_FINAL2
                 ("Konosuba 4", "Studio Drive", "Isekai", null, null, "Announced", "Planned", null),
                 ("Bocchi The Rock! 2", "CloverWorks", "Music", null, null, "Announced", "Planned", null),
                 ("Umamusume: Pretty Derby - Start of New Era", "CygamesPictures", "Sport", "2024", 1, "Released", "Watching", 1),
-                ("Spy x Family", "CloverWorks", "Shonen", "2022", 12, "Released", "Vieved", 12),
+                ("Spy x Family", "CloverWorks", "Shonen", "2022", 12, "Released", "Viewed", 12),
             };
 
             string insertAnime = @"
