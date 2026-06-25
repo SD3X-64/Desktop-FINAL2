@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
@@ -15,8 +16,6 @@ namespace Desktop_FINAL2
               Database=UniversityDB;
               Integrated Security=True;
               TrustServerCertificate=True;";
-
-        private bool _isInitialized;
 
         public string buttonText = "Initialize Database";
         public string ButtonText
@@ -46,20 +45,30 @@ namespace Desktop_FINAL2
             DataContext = this;
         }
 
-        public void DBInit(object? sender, RoutedEventArgs e)
+        public async void DBInit(object? sender, RoutedEventArgs e)
         {
-            if (_isInitialized == false)
+            if (Tests.IsDatabaseReady(ConnectionString) == false)
             {
-                ButtonText = "Initializing...";
+                int a = 4;
+                for (int i = 0; i < a; i++)
+                {
+                    string LoadingText = "Initializing";
+                    string dots = new string('.', (i % 4) + 1);
+                    ButtonText = LoadingText + dots;
+                    await Task.Delay(400);
+                }
                 DatabaseInitializer dbinit = new DatabaseInitializer();
                 dbinit.InitTables(ConnectionString);
                 dbinit.TestData(ConnectionString);
                 ButtonText = "Database have been initialized";
-                _isInitialized = true;
+                await Task.Delay(3000);
+                ButtonText = "Initialize Database";
             }
             else
             {
-                ButtonText = "Database is arleady initialized";
+                ButtonText = "Database is already initialized";
+                await Task.Delay(3000);
+                ButtonText = "Initialize Database";
             }
         }
     }
