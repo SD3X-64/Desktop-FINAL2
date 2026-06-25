@@ -14,11 +14,11 @@
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,0,-50">
             <Button Content="◄" Margin="5"/>    
-            <DataGrid ItemsSource="{Binding Titles}" AutoGenerateColumns="False">
+            <DataGrid ItemsSource="{Binding Ttles}" AutoGenerateColumns="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Название" Binding="{Binding Title}" Width="*"/>
-                    <DataGridTextColumn Header="Студия" Binding="{Binding StudioName}" Width="*"/>
-                    <DataGridTextColumn Header="Жанр" Binding="{Binding GenreName}" Width="*"/>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Title}" Width="*"/>
+                    <DataGridTextColumn Header="Studio" Binding="{Binding StudioName}" Width="*"/>
+                    <DataGridTextColumn Header="Genre" Binding="{Binding GenreName}" Width="*"/>
                 </DataGrid.Columns>
             </DataGrid>
             <Button Content="►" Margin="5"/>

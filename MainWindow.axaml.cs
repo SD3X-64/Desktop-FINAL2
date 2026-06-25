@@ -41,16 +41,28 @@ namespace Desktop_FINAL2
             }
         }
 
+        public ObservableCollection<Anime> ttles;
+
+        public ObservableCollection<Anime> Ttles
+        {
+            get => ttles;
+            set
+            {
+                ttles = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Ttles)));
+            }
+        }
+
+        private void LoadTitlesOC()
+        {
+            var list = LoadTitles(ConnectionString);
+            Titles = new ObservableCollection<Anime>(list);
+        }
+
         public MainWindow()
         {
             InitializeComponent();
             DataContext = this;
-
-            private void LoadTitlesOC()
-            {
-                var list = LoadTitles(ConnectionString);
-                Titles = new ObservableCollection<Anime>(list);
-            }
         }
 
         public async void DBInit(object? sender, RoutedEventArgs e)

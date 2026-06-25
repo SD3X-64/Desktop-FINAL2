@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Desktop_FINAL2
 {
-    internal class DatabaseInitializer
+    public class DatabaseInitializer
     {
         public class Anime
         {
