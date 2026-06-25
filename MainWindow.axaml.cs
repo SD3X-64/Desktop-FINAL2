@@ -30,6 +30,17 @@ namespace Desktop_FINAL2
             }
         }
 
+        public string searchBar = "Search by title...";
+        public string SearchBar
+        {
+            get { return searchBar; }
+            set
+            {
+                searchBar = value;
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(nameof(SearchBar)));
+            }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
