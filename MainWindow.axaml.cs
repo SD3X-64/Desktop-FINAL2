@@ -19,6 +19,17 @@ namespace Desktop_FINAL2
               Integrated Security=True;
               TrustServerCertificate=True;";
 
+        private string userInput = "";
+        public string UserInput
+        {
+            get { return userInput; }
+            set
+            {
+                userInput = value;
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(nameof(UserInput)));
+            }
+        }
+
         public string buttonText = "Initialize Database";
         public string ButtonText
         {
@@ -41,22 +52,58 @@ namespace Desktop_FINAL2
             }
         }
 
-        public ObservableCollection<Anime> ttles;
+        public ObservableCollection<Anime> _titles;
 
-        public ObservableCollection<Anime> Ttles
+        public ObservableCollection<Anime> Titles
         {
-            get => ttles;
+            get { return _titles; }
             set
             {
-                ttles = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Ttles)));
+                _titles = value;
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(nameof(Titles)));
             }
         }
 
-        private void LoadTitlesOC()
+        private ObservableCollection<Studio> _studios;
+        public ObservableCollection<Studio> Studios
         {
-            var list = LoadTitles(ConnectionString);
-            Titles = new ObservableCollection<Anime>(list);
+            get { return _studios; }
+            set 
+            { 
+                _studios = value; 
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(nameof(Studios))); 
+            }
+        }
+
+        public ObservableCollection<Genre> _genres;
+
+        public ObservableCollection<Genre> Genres
+        {
+            get { return _genres; }
+            set
+            {
+                _genres = value;
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(nameof(Genres)));
+            }
+        }
+
+        private object? currentItems;
+        public object? CurrentItems
+        {
+            get { return currentItems; }
+            set 
+            { 
+                currentItems = value; 
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentItems))); 
+            }
+        }
+
+        public void LoadData()
+        {
+            Titles = new ObservableCollection<Anime>(Logic.LoadTitles(ConnectionString));
+            Studios = new ObservableCollection<Studio>(Logic.LoadStudios(ConnectionString));
+            Genres = new ObservableCollection<Genre>(Logic.LoadGenres(ConnectionString));
+            CurrentItems = Titles;
         }
 
         public MainWindow()
@@ -83,13 +130,61 @@ namespace Desktop_FINAL2
                 ButtonText = "Database have been initialized";
                 await Task.Delay(3000);
                 ButtonText = "Initialize Database";
+                LoadData();
             }
             else
             {
                 ButtonText = "Database is already initialized";
                 await Task.Delay(3000);
                 ButtonText = "Initialize Database";
+                LoadData();
             }
+        }
+
+        private void Next(object? sender, RoutedEventArgs e)
+        {
+            if (CurrentItems == Titles)
+            {
+                SearchBar = "Search in studios...";
+                CurrentItems = Studios;
+            }
+            else if (CurrentItems == Studios)
+            {
+                SearchBar = "Search in genres...";
+                CurrentItems = Genres;
+            }
+            else if (CurrentItems == Genres) 
+            {
+                SearchBar = "Search by title...";
+                CurrentItems = Titles;
+            }
+                
+        }
+
+        private void Prev(object? sender, RoutedEventArgs e)
+        {
+            if (CurrentItems == Titles)
+            {
+                SearchBar = "Search in genres...";
+                CurrentItems = Genres;
+            }
+            else if (CurrentItems == Genres)
+            {
+                SearchBar = "Search in studios...";
+                CurrentItems = Studios;
+            }
+            else if (CurrentItems == Studios)
+            {
+                SearchBar = "Search by title...";
+                CurrentItems = Titles;
+            }
+        }
+
+
+
+        public void Search(object? sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
