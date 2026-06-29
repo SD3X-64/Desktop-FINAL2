@@ -19,6 +19,9 @@ namespace Desktop_FINAL2
               Integrated Security=True;
               TrustServerCertificate=True;";
 
+        private int _currentTableIndex = 0;
+        private object[] _tableArray = new object[3];
+
         private string userInput = "";
         public string UserInput
         {
@@ -103,6 +106,11 @@ namespace Desktop_FINAL2
             Titles = new ObservableCollection<Anime>(Logic.LoadTitles(ConnectionString));
             Studios = new ObservableCollection<Studio>(Logic.LoadStudios(ConnectionString));
             Genres = new ObservableCollection<Genre>(Logic.LoadGenres(ConnectionString));
+
+            _tableArray[0] = Titles;
+            _tableArray[1] = Studios;
+            _tableArray[2] = Genres;
+            _currentTableIndex = 0;
             CurrentItems = Titles;
         }
 
@@ -143,40 +151,46 @@ namespace Desktop_FINAL2
 
         private void Next(object? sender, RoutedEventArgs e)
         {
-            if (CurrentItems == Titles)
+            if (_currentTableIndex == 0)
             {
                 SearchBar = "Search in studios...";
                 CurrentItems = Studios;
+                _currentTableIndex = 1;
             }
-            else if (CurrentItems == Studios)
+            else if (_currentTableIndex == 1)
             {
                 SearchBar = "Search in genres...";
                 CurrentItems = Genres;
+                _currentTableIndex = 2;
             }
-            else if (CurrentItems == Genres) 
+            else if (_currentTableIndex == 2)
             {
                 SearchBar = "Search by title...";
                 CurrentItems = Titles;
+                _currentTableIndex = 0;
             }
-                
+
         }
 
         private void Prev(object? sender, RoutedEventArgs e)
         {
-            if (CurrentItems == Titles)
+            if (_currentTableIndex == 0)
             {
                 SearchBar = "Search in genres...";
                 CurrentItems = Genres;
+                _currentTableIndex = 2;
             }
-            else if (CurrentItems == Genres)
+            else if (_currentTableIndex == 2)
             {
                 SearchBar = "Search in studios...";
                 CurrentItems = Studios;
+                _currentTableIndex = 1;
             }
-            else if (CurrentItems == Studios)
+            else if (_currentTableIndex == 1)
             {
                 SearchBar = "Search by title...";
                 CurrentItems = Titles;
+                _currentTableIndex = 0;
             }
         }
 
