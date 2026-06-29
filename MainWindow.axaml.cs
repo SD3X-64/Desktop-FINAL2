@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using System;
 using System.Collections.ObjectModel;
@@ -194,11 +195,17 @@ namespace Desktop_FINAL2
             }
         }
 
-
-
         public void Search(object? sender, RoutedEventArgs e)
         {
+            using var connection = new SqlConnection(ConnectionString);
+            connection.Open();
 
+            string result = UserInput;
+            string sql = @"SELECT * FROM Titles WHERE Title = @result ORDER BY Title;";
+
+            using var command = new SqlCommand(sql, connection);
+            command.Parameters.AddWithValue("@result", result);
+            command.ExecuteNonQuery();
         }
     }
 }
