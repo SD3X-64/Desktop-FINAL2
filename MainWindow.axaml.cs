@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using static Desktop_FINAL2.DatabaseInitializer;
 
@@ -83,10 +84,10 @@ namespace Desktop_FINAL2
         public ObservableCollection<Studio> Studios
         {
             get { return _studios; }
-            set 
-            { 
-                _studios = value; 
-                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(nameof(Studios))); 
+            set
+            {
+                _studios = value;
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(nameof(Studios)));
             }
         }
 
@@ -119,6 +120,7 @@ namespace Desktop_FINAL2
         {
             InitializeComponent();
             DataContext = this;
+            LoadData();
         }
 
         public async void DBInit(object? sender, RoutedEventArgs e)
@@ -202,20 +204,20 @@ namespace Desktop_FINAL2
             var sb = new System.Text.StringBuilder();
             int index = 1;
 
-            if (collection is ObservableCollection<Anime> animeList)
+            if (collection is ObservableCollection<Anime> titleList)
             {
-                foreach (var a in animeList)
-                    sb.AppendLine($"{index++}. {a.Title} — {a.StudioName} ({a.GenreName}, {a.YearStarted?.Year ?? 0}, {a.Episodes ?? 0} ύο.)");
+                foreach (var a in titleList)
+                    sb.AppendLine($"{index++}. {a.Title} — {a.StudioName}: \n({a.GenreName}, {a.YearStarted?.Year ?? 0}, {a.Episodes ?? 0} ep.)    \nStatus: {a.Status}, Watch Status: {a.WatchStatus}, Last Watched Ep: {a.LastWatched ?? 0}\n");
             }
             else if (collection is ObservableCollection<Studio> studioList)
             {
                 foreach (var s in studioList)
-                    sb.AppendLine($"{index++}. {s.Name}");
+                    sb.AppendLine($"{index++}. {s.Name}\n");
             }
             else if (collection is ObservableCollection<Genre> genreList)
             {
                 foreach (var g in genreList)
-                    sb.AppendLine($"{index++}. {g.Name}");
+                    sb.AppendLine($"{index++}. {g.Name}\n");
             }
             else
             {
@@ -227,15 +229,57 @@ namespace Desktop_FINAL2
 
         public void Search(object? sender, RoutedEventArgs e)
         {
-            using var connection = new SqlConnection(ConnectionString);
-            connection.Open();
+            if (string.IsNullOrWhiteSpace(UserInput))
+            {
+                switch (_currentTableIndex)
+                {
+                    case 0: TableText = FormatCollection(Titles); break;
+                    case 1: TableText = FormatCollection(Studios); break;
+                    case 2: TableText = FormatCollection(Genres); break;
+                }
+                return;
+            }
 
-            string result = UserInput;
-            string sql = @"SELECT * FROM Titles WHERE Title = @result ORDER BY Title;";
+            if (_currentTableIndex == 0)
+            {
+                var filtered = Titles
+                    .Where(a => a.Title.Contains(UserInput, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+                TableText = FormatCollection(new ObservableCollection<Anime>(filtered));
+            }
+            else if (_currentTableIndex == 1)
+            {
+                var filtered = Studios
+                    .Where(s => s.Name.Contains(UserInput, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+                TableText = FormatCollection(new ObservableCollection<Studio>(filtered));
+            }
+            else if (_currentTableIndex == 2)
+            {
+                var filtered = Genres
+                    .Where(g => g.Name.Contains(UserInput, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+                TableText = FormatCollection(new ObservableCollection<Genre>(filtered));
+            }
+        }
 
-            using var command = new SqlCommand(sql, connection);
-            command.Parameters.AddWithValue("@result", result);
-            command.ExecuteNonQuery();
+        public void Add(object? sender, RoutedEventArgs e)
+        {
+
+        }
+
+        public void Delete(object? sender, RoutedEventArgs e)
+        {
+
+        }
+
+        public void Redact(object? sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void TextBox_TextChanged(object? sender, TextChangedEventArgs e)
+        {
         }
     }
 }
