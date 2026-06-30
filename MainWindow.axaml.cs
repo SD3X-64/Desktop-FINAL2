@@ -207,7 +207,7 @@ namespace Desktop_FINAL2
             if (collection is ObservableCollection<Anime> titleList)
             {
                 foreach (var a in titleList)
-                    sb.AppendLine($"{index++}. {a.Title} — {a.StudioName}: \n({a.GenreName}, {a.YearStarted?.Year ?? 0}, {a.Episodes ?? 0} ep.)    \nStatus: {a.Status}, Watch Status: {a.WatchStatus}, Last Watched Ep: {a.LastWatched ?? 0}\n");
+                    sb.AppendLine($"{index++}. {a.Title} — {a.StudioName}: \n({a.GenreName}, {a.YearStarted?.Year ?? 0}, {a.Episodes ?? 0} ep.)    \nStatus: {a.Status},    Watch Status: {a.WatchStatus},  Last Watched Ep: {a.LastWatched ?? 0}\n");
             }
             else if (collection is ObservableCollection<Studio> studioList)
             {
