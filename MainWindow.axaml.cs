@@ -45,6 +45,17 @@ namespace Desktop_FINAL2
             }
         }
 
+        public string tableText = "";
+        public string TableText
+        {
+            get { return tableText; }
+            set
+            {
+                tableText = value;
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(nameof(TableText)));
+            }
+        }
+
         public string searchBar = "Search by title...";
         public string SearchBar
         {
@@ -91,17 +102,6 @@ namespace Desktop_FINAL2
             }
         }
 
-        private object? currentItems;
-        public object? CurrentItems
-        {
-            get { return currentItems; }
-            set 
-            { 
-                currentItems = value; 
-                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentItems))); 
-            }
-        }
-
         public void LoadData()
         {
             Titles = new ObservableCollection<Anime>(Logic.LoadTitles(ConnectionString));
@@ -112,7 +112,7 @@ namespace Desktop_FINAL2
             _tableArray[1] = Studios;
             _tableArray[2] = Genres;
             _currentTableIndex = 0;
-            CurrentItems = Titles;
+            TableText = FormatCollection(Titles);
         }
 
         public MainWindow()
@@ -155,19 +155,19 @@ namespace Desktop_FINAL2
             if (_currentTableIndex == 0)
             {
                 SearchBar = "Search in studios...";
-                CurrentItems = Studios;
+                TableText = FormatCollection(Studios);
                 _currentTableIndex = 1;
             }
             else if (_currentTableIndex == 1)
             {
                 SearchBar = "Search in genres...";
-                CurrentItems = Genres;
+                TableText = FormatCollection(Genres);
                 _currentTableIndex = 2;
             }
             else if (_currentTableIndex == 2)
             {
                 SearchBar = "Search by title...";
-                CurrentItems = Titles;
+                TableText = FormatCollection(Titles);
                 _currentTableIndex = 0;
             }
 
@@ -178,21 +178,51 @@ namespace Desktop_FINAL2
             if (_currentTableIndex == 0)
             {
                 SearchBar = "Search in genres...";
-                CurrentItems = Genres;
+                TableText = FormatCollection(Genres);
                 _currentTableIndex = 2;
             }
             else if (_currentTableIndex == 2)
             {
                 SearchBar = "Search in studios...";
-                CurrentItems = Studios;
+                TableText = FormatCollection(Studios);
                 _currentTableIndex = 1;
             }
             else if (_currentTableIndex == 1)
             {
                 SearchBar = "Search by title...";
-                CurrentItems = Titles;
+                TableText = FormatCollection(Titles);
                 _currentTableIndex = 0;
             }
+        }
+
+        public string FormatCollection(object collection)
+        {
+            if (collection == null) return "Нет данных.";
+
+            var sb = new System.Text.StringBuilder();
+            int index = 1;
+
+            if (collection is ObservableCollection<Anime> animeList)
+            {
+                foreach (var a in animeList)
+                    sb.AppendLine($"{index++}. {a.Title} — {a.StudioName} ({a.GenreName}, {a.YearStarted?.Year ?? 0}, {a.Episodes ?? 0} эп.)");
+            }
+            else if (collection is ObservableCollection<Studio> studioList)
+            {
+                foreach (var s in studioList)
+                    sb.AppendLine($"{index++}. {s.Name}");
+            }
+            else if (collection is ObservableCollection<Genre> genreList)
+            {
+                foreach (var g in genreList)
+                    sb.AppendLine($"{index++}. {g.Name}");
+            }
+            else
+            {
+                return "Неизвестный тип данных.";
+            }
+
+            return sb.ToString();
         }
 
         public void Search(object? sender, RoutedEventArgs e)
